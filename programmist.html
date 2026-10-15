@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Программист — Cookies Games</title>
+    <style>
+        :root {
+            --bg-purple: #8e2de2;
+            --text-black: #111111;
+            --cookie-beige: #e6b87d;
+            --cookie-dark: #c99a5b;
+            --cookie-light: #fdf5e6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-purple);
+            color: var(--text-black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Шапка */
+        header {
+            text-align: center;
+            padding: 30px 20px 10px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            color: var(--text-black);
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-black);
+            opacity: 0.85;
+            margin-top: 10px;
+        }
+
+        /* Кнопка назад */
+        .back-container {
+            text-align: center;
+            margin: 25px 0 10px;
+        }
+
+        .btn {
+            background-color: var(--cookie-beige);
+            color: var(--text-black);
+            border: 3px solid var(--text-black);
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 0px var(--text-black);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--cookie-dark);
+            transform: translateY(2px);
+            box-shadow: 0px 2px 0px var(--text-black);
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* Список вопросов */
+        .questions-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 20px auto 60px;
+            padding: 0 40px;
+            flex: 1;
+        }
+
+        .question-card {
+            background-color: var(--cookie-light);
+            border: 4px solid var(--text-black);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .question-header {
+            padding: 18px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            user-select: none;
+            background-color: var(--cookie-beige);
+            transition: background-color 0.2s ease;
+        }
+
+        .question-header:hover {
+            background-color: var(--cookie-dark);
+        }
+
+        .question-number {
+            background-color: var(--text-black);
+            color: var(--cookie-beige);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .toggle-icon {
+            font-size: 1.4rem;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .question-card.open .toggle-icon {
+            transform: rotate(45deg);
+        }
+
+        .answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 25px;
+            background-color: var(--cookie-light);
+            border-top: 0 solid #e0d0b8;
+        }
+
+        .question-card.open .answer {
+            max-height: 800px;
+            padding: 20px 25px;
+            border-top: 2px solid #e0d0b8;
+        }
+
+        .answer p {
+            margin: 0 0 10px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .answer p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Блок с кодом */
+        .answer code {
+            display: block;
+            background-color: #2b2b2b;
+            color: #e6b87d;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            margin: 10px 0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .answer .inline-code {
+            display: inline;
+            background-color: #2b2b2b;
+            color: #e6b87d;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+
+        .answer ul {
+            margin: 10px 0;
+            padding-left: 25px;
+            line-height: 1.7;
+        }
+
+        /* Адаптив */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .subtitle { font-size: 1rem; }
+            .questions-container { padding: 0 15px; }
+            .question-header { padding: 15px 18px; font-size: 1rem; }
+            .question-number { width: 28px; height: 28px; font-size: 0.85rem; }
+            .answer { padding: 0 18px; }
+            .question-card.open .answer { padding: 15px 18px; }
+            .answer code { font-size: 0.85rem; padding: 10px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Программист</h1>
+        <div class="subtitle">10 вопросов для подготовки 🍪</div>
+    </header>
+
+    <div class="back-container">
+        <a href="podgotovka.html" class="btn">← Назад</a>
+    </div>
+
+    <div class="questions-container">
+
+        <!-- Вопрос 1 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">1</div>
+                <div class="question-text">Что такое переменная?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Переменная</strong> — это именованная область памяти, в которой хранится какое-либо значение. Переменной можно присвоить значение, изменить его и использовать в дальнейшем коде.</p>
+                <p>Пример на JavaScript:</p>
+                <code>let name = "Марк";<br>let age = 25;</code>
+            </div>
+        </div>
+
+        <!-- Вопрос 2 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">2</div>
+                <div class="question-text">Что такое функция?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Функция</strong> — это блок кода, который выполняет определённую задачу. Функцию можно вызывать много раз, передавать ей аргументы и получать результат.</p>
+                <p>Пример:</p>
+                <code>function greet(name) {<br>&nbsp;&nbsp;return "Привет, " + name + "!";<br>}<br>console.log(greet("Марк"));</code>
+            </div>
+        </div>
+
+        <!-- Вопрос 3 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">3</div>
+                <div class="question-text">Что такое локальный сервер?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Локальный сервер</strong> — это сервер, который запускается на твоём компьютере (локально) и используется для разработки и тестирования сайтов или приложений. Он доступен по адресу <span class="inline-code">localhost</span> или <span class="inline-code">127.0.0.1</span>.</p>
+                <p>Примеры: <strong>XAMPP</strong>, <strong>OpenServer</strong>, <strong>Live Server</strong> в VS Code, <strong>Node.js</strong>.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 4 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">4</div>
+                <div class="question-text">Что такое цикл?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Цикл</strong> — это конструкция, которая позволяет повторять один и тот же блок кода несколько раз, пока выполняется определённое условие.</p>
+                <p>Виды циклов: <span class="inline-code">for</span>, <span class="inline-code">while</span>, <span class="inline-code">do...while</span>.</p>
+                <code>for (let i = 0; i < 5; i++) {<br>&nbsp;&nbsp;console.log(i);<br>}</code>
+            </div>
+        </div>
+
+        <!-- Вопрос 5 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">5</div>
+                <div class="question-text">Что такое библиотека?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Библиотека</strong> — это набор готового кода (функций, классов, методов), который можно подключить к своему проекту и использовать, чтобы не писать всё с нуля.</p>
+                <p>Примеры: <strong>jQuery</strong>, <strong>React</strong>, <strong>Lodash</strong>, <strong>Pandas</strong> (Python).</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 6 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">6</div>
+                <div class="question-text">Напиши цикл отсчёта от 0 до 10.</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p>Пример на JavaScript:</p>
+                <code>for (let i = 0; i <= 10; i++) {<br>&nbsp;&nbsp;console.log(i);<br>}</code>
+                <p>Этот цикл выведет числа от 0 до 10 включительно.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 7 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">7</div>
+                <div class="question-text">Напишите переменную, имеющую булево значение.</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p>Пример:</p>
+                <code>let isGameReady = true;<br>let isPaused = false;</code>
+                <p>Булево значение — это <span class="inline-code">true</span> (истина) или <span class="inline-code">false</span> (ложь).</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 8 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">8</div>
+                <div class="question-text">Напишите объект, имеющий внутри ключ color со значением red.</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p>Пример:</p>
+                <code>let myObject = {<br>&nbsp;&nbsp;color: "red"<br>};</code>
+                <p>Обратиться к значению можно так: <span class="inline-code">myObject.color</span> → вернёт <span class="inline-code">"red"</span>.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 9 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">9</div>
+                <div class="question-text">Напишите массив, имеющий внутри себя значения: 1, красный, истинно, ложь, 3.14.</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p>Пример:</p>
+                <code>let myArray = [1, "красный", true, false, 3.14];</code>
+                <p>Массив может хранить значения разных типов — числа, строки, булевы значения и т.д.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 10 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">10</div>
+                <div class="question-text">Напишите все виды данных переменных.</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p>Основные типы данных в JavaScript:</p>
+                <ul>
+                    <li><strong>Number</strong> — числа (целые и дробные): <span class="inline-code">42</span>, <span class="inline-code">3.14</span></li>
+                    <li><strong>String</strong> — строки: <span class="inline-code">"Привет"</span></li>
+                    <li><strong>Boolean</strong> — логический тип: <span class="inline-code">true</span> / <span class="inline-code">false</span></li>
+                    <li><strong>Undefined</strong> — переменная объявлена, но значение не присвоено</li>
+                    <li><strong>Null</strong> — намеренное отсутствие значения</li>
+                    <li><strong>Object</strong> — объекты: <span class="inline-code">{ key: "value" }</span></li>
+                    <li><strong>Array</strong> — массивы: <span class="inline-code">[1, 2, 3]</span></li>
+                    <li><strong>Symbol</strong> — уникальный идентификатор</li>
+                    <li><strong>BigInt</strong> — для очень больших чисел</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleAnswer(header) {
+            const card = header.parentElement;
+            card.classList.toggle('open');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Разработчики — Cookies Games</title>
+    <style>
+        :root {
+            --bg-purple: #8e2de2;
+            --text-black: #111111;
+            --cookie-beige: #e6b87d;
+            --cookie-dark: #c99a5b;
+            --cookie-light: #fdf5e6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-purple);
+            color: var(--text-black);
+            min-height: 100vh;
+        }
+
+        /* Шапка */
+        header {
+            text-align: center;
+            padding: 30px 20px 10px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            color: var(--text-black);
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-black);
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Кнопка назад */
+        .back-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .btn {
+            background-color: var(--cookie-beige);
+            color: var(--text-black);
+            border: 3px solid var(--text-black);
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 0px var(--text-black);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--cookie-dark);
+            transform: translateY(2px);
+            box-shadow: 0px 2px 0px var(--text-black);
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* Сетка карточек */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 40px 60px;
+        }
+
+        /* Карточка разработчика */
+        .dev-card {
+            background-color: var(--cookie-light);
+            border: 4px solid var(--text-black);
+            border-radius: 20px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .dev-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Круглое фото (как печенье) */
+        .dev-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid var(--text-black);
+            background-color: var(--cookie-beige);
+            object-fit: cover;
+            margin-bottom: 20px;
+            /* Заглушка, если нет фото */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            overflow: hidden;
+        }
+
+        .dev-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dev-name {
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 0 0 15px;
+            color: var(--text-black);
+            border-bottom: 3px solid var(--cookie-dark);
+            padding-bottom: 8px;
+            width: 100%;
+        }
+
+        .dev-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #333;
+            text-align: left;
+            width: 100%;
+            /* Здесь ты можешь писать описание вручную в HTML */
+        }
+
+        /* Адаптив */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .team-grid { padding: 20px; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Наши разработчики</h1>
+        <div class="subtitle">Команда Cookies Games 🍪</div>
+    </header>
+
+    <div class="back-container">
+        <a href="index.html" class="btn">← На главную</a>
+    </div>
+
+    <div class="team-grid">
+
+        <!-- Карточка 1: Марк -->
+        <div class="dev-card">
+            <div class="dev-photo">
+                <!-- Замени этот блок на: <img src="mark.jpg" alt="Марк"> когда добавишь фото -->
+                <img src="https://upload.wikimedia.org/wikipedia/ru/a/ac/Walter_Hartwell_White.jpg?utm_source=ru.wikipedia.org&utm_campaign=index&utm_content=original" alt="">
+            </div>
+            <h2 class="dev-name">Марк</h2>
+            <div class="dev-description">
+                <!-- Сюда впиши описание Марка -->
+                <p><em>Марк - главный монтажёр-дизайнер. Без него Cookies games - не Cookies games. Он главный кто обрабатывает и создаёт изображения в игре.</em></p>
+            </div>
+        </div>
+
+        <!-- Карточка 2: Ярослав -->
+        <div class="dev-card">
+            <div class="dev-photo">
+                <img src="https://upload.wikimedia.org/wikipedia/ru/5/52/Jesse_Bruce_Pinkman.jpg?utm_source=ru.wikipedia.org&utm_campaign=index&utm_content=original" alt="">
+            </div>
+            <h2 class="dev-name">Ярослав</h2>
+            <div class="dev-description">
+                <p><em>Ярослав - главный тестировщик игры. Находит много багов, нашёл глюки на стадии первичной проверки игры, очень много чего исправилю Без него приостановится процесс создания игр</em></p>
+            </div>
+        </div>
+
+        <!-- Карточка 3: Артём -->
+        <div class="dev-card">
+            <div class="dev-photo">
+                <img src="https://assets.epuzzle.info/puzzle/136/889/original.jpg" alt="">
+            </div>
+            <h2 class="dev-name">Артём</h2>
+            <div class="dev-description">
+                <p><em>Артём - главный прораммист, а также основатель компании. Без него компания - не компания, он усердно работает на благо игр и также учится новым методам.</em></p>
+            </div>
+        </div>
+
+        <!-- Карточка 4: Евгений Петух -->
+        <div class="dev-card">
+            <div class="dev-photo">
+                <img src="https://avatars.mds.yandex.net/get-kino-vod-films-gallery/177294/8edaf90de249e40a839c77ced441aab8/380x240" alt="">
+            </div>
+            <h2 class="dev-name">Евгений</h2>
+            <div class="dev-description">
+                <p><em>Евгений - главный звукорежжиссёр в игре, записывает все звуки и обрабатывает их, всме звуки в игре - его работа, без него игра - не игра.</em></p>
+            </div>
+        </div>
+
+        <!-- Карточка 5: Арина -->
+        <div class="dev-card">
+            <div class="dev-photo">
+                <img src="https://upload.wikimedia.org/wikipedia/ru/5/57/Miku_v4_bundle_art.png?utm_source=ru.wikipedia.org&utm_campaign=index&utm_content=original" alt="">
+            </div>
+            <h2 class="dev-name">Арина</h2>
+            <div class="dev-description">
+                <p><em>Вторичный монтажёр-дизайнер. Создаёт видео в игре, но основеную работу выполняет Марк, она его заместитель, когда марк не работает работает она.</em></p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

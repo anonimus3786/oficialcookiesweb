@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookies Games</title>
+    <style>
+        /* Цветовая палитра с картинки */
+        :root {
+            --bg-purple: #8e2de2;
+            --text-black: #111111;
+            --cookie-beige: #e6b87d;
+            --cookie-dark: #c99a5b;
+            --cookie-light: #fdf5e6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-purple);
+            color: var(--text-black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Шапка сайта */
+        header {
+            text-align: center;
+            padding: 30px 20px 10px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            color: var(--text-black);
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Кнопки навигации */
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            margin: 30px auto;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .btn {
+            background-color: var(--cookie-beige);
+            color: var(--text-black);
+            border: 3px solid var(--text-black);
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 0px var(--text-black);
+        }
+
+        .btn:hover {
+            background-color: var(--cookie-dark);
+            transform: translateY(2px);
+            box-shadow: 0px 2px 0px var(--text-black);
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* Основной контент: слева - о компании, справа - таблица */
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 30px;
+            padding: 0 40px 50px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        /* Блок "О компании" */
+        .about-company {
+            background-color: var(--cookie-light);
+            border: 4px solid var(--text-black);
+            border-radius: 20px;
+            padding: 25px 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+            flex: 1 1 400px;
+        }
+
+        .about-company h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            border-bottom: 3px solid var(--text-black);
+            padding-bottom: 10px;
+        }
+
+        .about-company p {
+            line-height: 1.6;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        /* Контейнер таблицы - теперь в правом нижнем углу */
+        .table-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end; /* Прижимаем таблицу к правому краю */
+            flex: 1 1 350px;
+            align-self: flex-end; /* Прижимаем блок к низу, если контент слева выше */
+        }
+
+        .table-container {
+            background-color: var(--cookie-light);
+            width: 100%;
+            max-width: 400px; /* Компактная таблица */
+            border-radius: 20px;
+            border: 4px solid var(--text-black);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .table-header {
+            background-color: var(--text-black);
+            color: var(--cookie-beige);
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* Область внутренней прокрутки */
+        .scrollable-table {
+            max-height: 300px; /* Фиксированная высота для появления скролла */
+            overflow-y: auto;
+            min-height: 120px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 2px solid #e0d0b8;
+        }
+
+        th {
+            background-color: var(--cookie-beige);
+            color: var(--text-black);
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Сообщение о пустой таблице */
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Кастомный скроллбар */
+        .scrollable-table::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .scrollable-table::-webkit-scrollbar-track {
+            background: var(--cookie-light);
+        }
+
+        .scrollable-table::-webkit-scrollbar-thumb {
+            background: var(--cookie-beige);
+            border-radius: 5px;
+            border: 2px solid var(--cookie-light);
+        }
+
+        .scrollable-table::-webkit-scrollbar-thumb:hover {
+            background: var(--cookie-dark);
+        }
+
+        /* Адаптив для мобильных */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+                padding: 0 20px 40px;
+            }
+            .table-wrapper {
+                align-items: center;
+                align-self: center;
+            }
+            .table-container {
+                max-width: 100%;
+            }
+            .about-company {
+                max-width: 100%;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+            .buttons-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>COOKIES GAMES</h1>
+    </header>
+
+    <div class="buttons-container">
+        <a href="podgotovka.html" class="btn" style="text-decoration:none; display:inline-block;">Подготовка к собеседованию</a>
+        <a href="razrabotchiki.html" class="btn" style="text-decoration:none; display:inline-block;">Разработчики</a>
+    </div>
+
+    <main class="main-content">
+        
+        <!-- Левый блок: О компании -->
+        <section class="about-company">
+            <h2>О нашей компании</h2>
+            <p>
+                <strong>Cookies Games</strong> — это команда которая начинает создавать игры, в своей сфере она только появилась, а игру почти сделала, столкнулась с многими проблемами и с каждым днём развивает свой новый проект
+            </p>
+            <p>
+                Наша миссия — создать новые проекты, чтобы радовать людей
+            </p>
+            <p>
+                🍪 Оставайся с нами — вместе мы сделаем мир кода чуточку вкуснее!
+            </p>
+        </section>
+
+        <!-- Правый нижний блок: Новости -->
+        <div class="table-wrapper">
+            <div class="table-container">
+                <div class="table-header">Новости проекта</div>
+                <div class="scrollable-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Заголовок</th>
+                            </tr>
+                        </thead>
+                        <tbody id="news-table-body">
+                            <tr>
+                                <td>12.10.2026</td>
+                                <td>ЦОД Яндексы снесён украинскими БПЛА. Выход игры перенесён на 17.12.2026</td>
+                                <td>Опубликовано</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестировщик — Cookies Games</title>
+    <style>
+        :root {
+            --bg-purple: #8e2de2;
+            --text-black: #111111;
+            --cookie-beige: #e6b87d;
+            --cookie-dark: #c99a5b;
+            --cookie-light: #fdf5e6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-purple);
+            color: var(--text-black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Шапка */
+        header {
+            text-align: center;
+            padding: 30px 20px 10px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            color: var(--text-black);
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-black);
+            opacity: 0.85;
+            margin-top: 10px;
+        }
+
+        /* Кнопка назад */
+        .back-container {
+            text-align: center;
+            margin: 25px 0 10px;
+        }
+
+        .btn {
+            background-color: var(--cookie-beige);
+            color: var(--text-black);
+            border: 3px solid var(--text-black);
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 0px var(--text-black);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--cookie-dark);
+            transform: translateY(2px);
+            box-shadow: 0px 2px 0px var(--text-black);
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* Список вопросов */
+        .questions-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 20px auto 60px;
+            padding: 0 40px;
+            flex: 1;
+        }
+
+        .question-card {
+            background-color: var(--cookie-light);
+            border: 4px solid var(--text-black);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .question-header {
+            padding: 18px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            user-select: none;
+            background-color: var(--cookie-beige);
+            transition: background-color 0.2s ease;
+        }
+
+        .question-header:hover {
+            background-color: var(--cookie-dark);
+        }
+
+        .question-number {
+            background-color: var(--text-black);
+            color: var(--cookie-beige);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .toggle-icon {
+            font-size: 1.4rem;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .question-card.open .toggle-icon {
+            transform: rotate(45deg);
+        }
+
+        .answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 25px;
+            background-color: var(--cookie-light);
+            border-top: 0 solid #e0d0b8;
+        }
+
+        .question-card.open .answer {
+            max-height: 1000px;
+            padding: 20px 25px;
+            border-top: 2px solid #e0d0b8;
+        }
+
+        .answer p {
+            margin: 0 0 10px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .answer p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Блок с кодом */
+        .answer code {
+            display: block;
+            background-color: #2b2b2b;
+            color: #e6b87d;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            margin: 10px 0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .answer .inline-code {
+            display: inline;
+            background-color: #2b2b2b;
+            color: #e6b87d;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+
+        .answer ul {
+            margin: 10px 0;
+            padding-left: 25px;
+            line-height: 1.7;
+        }
+
+        .answer ul li {
+            margin-bottom: 5px;
+        }
+
+        /* Адаптив */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .subtitle { font-size: 1rem; }
+            .questions-container { padding: 0 15px; }
+            .question-header { padding: 15px 18px; font-size: 1rem; }
+            .question-number { width: 28px; height: 28px; font-size: 0.85rem; }
+            .answer { padding: 0 18px; }
+            .question-card.open .answer { padding: 15px 18px; }
+            .answer code { font-size: 0.85rem; padding: 10px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Тестировщик</h1>
+        <div class="subtitle">10 вопросов для подготовки 🍪</div>
+    </header>
+
+    <div class="back-container">
+        <a href="podgotovka.html" class="btn">← Назад</a>
+    </div>
+
+    <div class="questions-container">
+
+        <!-- Вопрос 1 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">1</div>
+                <div class="question-text">Что такое тестирование ПО?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Тестирование ПО</strong> — это процесс проверки программного продукта на соответствие требованиям, а также поиск дефектов (багов) до того, как их увидит пользователь.</p>
+                <p>Цель тестирования — убедиться, что продукт работает корректно, стабильно и безопасно.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 2 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">2</div>
+                <div class="question-text">Чем отличается баг от ошибки?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Ошибка (Error)</strong> — это действие человека (программиста, аналитика), которое привело к неправильному результату. Ошибки бывают в коде, в требованиях, в дизайне.</p>
+                <p><strong>Баг (Defect/Bug)</strong> — это уже следствие ошибки: несоответствие фактического результата ожидаемому. Именно баг находит тестировщик.</p>
+                <p>Пример: программист ошибся в формуле (ошибка) → при расчёте выходит неверная сумма (баг).</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 3 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">3</div>
+                <div class="question-text">Что такое тест-кейс?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Тест-кейс</strong> — это документ с описанием шагов, входных данных и ожидаемого результата, который позволяет проверить конкретную функцию или сценарий.</p>
+                <p>Обычно тест-кейс содержит:</p>
+                <ul>
+                    <li>ID и название</li>
+                    <li>Предусловия</li>
+                    <li>Шаги воспроизведения</li>
+                    <li>Ожидаемый результат</li>
+                    <li>Постусловия</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Вопрос 4 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">4</div>
+                <div class="question-text">Что такое баг-репорт?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Баг-репорт</strong> — это документ, в котором тестировщик описывает найденный дефект, чтобы разработчик мог его воспроизвести и исправить.</p>
+                <p>Хороший баг-репорт включает:</p>
+                <ul>
+                    <li>Заголовок (краткое описание)</li>
+                    <li>Шаги воспроизведения</li>
+                    <li>Фактический результат</li>
+                    <li>Ожидаемый результат</li>
+                    <li>Окружение (ОС, браузер, версия)</li>
+                    <li>Скриншоты или видео</li>
+                    <li>Приоритет и серьёзность</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Вопрос 5 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">5</div>
+                <div class="question-text">Виды тестирования — какие знаешь?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p>Основные виды тестирования:</p>
+                <ul>
+                    <li><strong>Функциональное</strong> — проверка функций продукта</li>
+                    <li><strong>Регрессионное</strong> — проверка, что старые функции не сломались после изменений</li>
+                    <li><strong>Дымовое (Smoke)</strong> — быстрая проверка основной работоспособности</li>
+                    <li><strong>Интеграционное</strong> — проверка взаимодействия модулей</li>
+                    <li><strong>Нагрузочное</strong> — проверка поведения под нагрузкой</li>
+                    <li><strong>Юзабилити</strong> — удобство использования</li>
+                    <li><strong>Безопасности</strong> — поиск уязвимостей</li>
+                    <li><strong>UI/UX</strong> — проверка интерфейса</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Вопрос 6 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">6</div>
+                <div class="question-text">Что такое позитивное и негативное тестирование?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Позитивное тестирование</strong> — проверка того, что система работает правильно при корректных входных данных. Например: ввод правильного пароля → вход выполнен.</p>
+                <p><strong>Негативное тестирование</strong> — проверка поведения системы при некорректных данных. Например: ввод неправильного пароля → появляется сообщение об ошибке.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 7 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">7</div>
+                <div class="question-text">Что такое чек-лист?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Чек-лист</strong> — это список проверок, которые нужно выполнить. В отличие от тест-кейса, чек-лист не описывает шаги подробно, а лишь перечисляет, что нужно проверить.</p>
+                <p>Пример чек-листа для формы авторизации:</p>
+                <code>☐ Ввод корректного логина и пароля<br>☐ Ввод неверного пароля<br>☐ Пустые поля<br>☐ Кнопка "Показать пароль"<br>☐ Восстановление пароля</code>
+            </div>
+        </div>
+
+        <!-- Вопрос 8 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">8</div>
+                <div class="question-text">Что такое регрессионное тестирование и зачем оно нужно?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Регрессионное тестирование</strong> — это повторная проверка уже протестированных функций после внесения изменений в код (новых фич, исправлений багов).</p>
+                <p>Оно нужно, чтобы убедиться: новые изменения не сломали то, что работало раньше. Обычно проводится перед каждым релизом.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 9 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">9</div>
+                <div class="question-text">Чем отличается Severity от Priority?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Severity (серьёзность)</strong> — насколько баг влияет на работу системы. Определяется технически. Например: приложение падает — высокий Severity.</p>
+                <p><strong>Priority (приоритет)</strong> — насколько срочно нужно исправить баг. Определяется бизнесом. Например: опечатка в названии компании на главной — низкий Severity, но высокий Priority.</p>
+                <p>Бывают случаи, когда Severity высокий, а Priority низкий (баг в старой версии, которую скоро удалят), и наоборот.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 10 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">10</div>
+                <div class="question-text">Что такое жизненный цикл бага?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Жизненный цикл бага</strong> — это последовательность статусов, через которые проходит дефект от обнаружения до закрытия.</p>
+                <p>Основные статусы:</p>
+                <ul>
+                    <li><strong>New</strong> — баг только что найден</li>
+                    <li><strong>Assigned</strong> — назначен разработчику</li>
+                    <li><strong>Open / In Progress</strong> — в работе</li>
+                    <li><strong>Fixed</strong> — исправлен</li>
+                    <li><strong>Ready for Test</strong> — готов к проверке</li>
+                    <li><strong>Verified / Closed</strong> — подтверждён и закрыт</li>
+                    <li><strong>Reopened</strong> — если баг воспроизвёлся снова</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleAnswer(header) {
+            const card = header.parentElement;
+            card.classList.toggle('open');
+        }
+    </script>
+
+</body>
+</html>

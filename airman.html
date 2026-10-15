@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Звукорежиссёр — Cookies Games</title>
+    <style>
+        :root {
+            --bg-purple: #8e2de2;
+            --text-black: #111111;
+            --cookie-beige: #e6b87d;
+            --cookie-dark: #c99a5b;
+            --cookie-light: #fdf5e6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-purple);
+            color: var(--text-black);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Шапка */
+        header {
+            text-align: center;
+            padding: 30px 20px 10px;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            color: var(--text-black);
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-black);
+            opacity: 0.85;
+            margin-top: 10px;
+        }
+
+        /* Кнопка назад */
+        .back-container {
+            text-align: center;
+            margin: 25px 0 10px;
+        }
+
+        .btn {
+            background-color: var(--cookie-beige);
+            color: var(--text-black);
+            border: 3px solid var(--text-black);
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 0px var(--text-black);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--cookie-dark);
+            transform: translateY(2px);
+            box-shadow: 0px 2px 0px var(--text-black);
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* Список вопросов */
+        .questions-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 20px auto 60px;
+            padding: 0 40px;
+            flex: 1;
+        }
+
+        .question-card {
+            background-color: var(--cookie-light);
+            border: 4px solid var(--text-black);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .question-header {
+            padding: 18px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            user-select: none;
+            background-color: var(--cookie-beige);
+            transition: background-color 0.2s ease;
+        }
+
+        .question-header:hover {
+            background-color: var(--cookie-dark);
+        }
+
+        .question-number {
+            background-color: var(--text-black);
+            color: var(--cookie-beige);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .toggle-icon {
+            font-size: 1.4rem;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .question-card.open .toggle-icon {
+            transform: rotate(45deg);
+        }
+
+        .answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 25px;
+            background-color: var(--cookie-light);
+            border-top: 0 solid #e0d0b8;
+        }
+
+        .question-card.open .answer {
+            max-height: 1000px;
+            padding: 20px 25px;
+            border-top: 2px solid #e0d0b8;
+        }
+
+        .answer p {
+            margin: 0 0 10px;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .answer p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Блок с кодом / формулой */
+        .answer code {
+            display: block;
+            background-color: #2b2b2b;
+            color: #e6b87d;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            margin: 10px 0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        .answer .inline-code {
+            display: inline;
+            background-color: #2b2b2b;
+            color: #e6b87d;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+        }
+
+        .answer ul {
+            margin: 10px 0;
+            padding-left: 25px;
+            line-height: 1.7;
+        }
+
+        .answer ul li {
+            margin-bottom: 5px;
+        }
+
+        /* Адаптив */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .subtitle { font-size: 1rem; }
+            .questions-container { padding: 0 15px; }
+            .question-header { padding: 15px 18px; font-size: 1rem; }
+            .question-number { width: 28px; height: 28px; font-size: 0.85rem; }
+            .answer { padding: 0 18px; }
+            .question-card.open .answer { padding: 15px 18px; }
+            .answer code { font-size: 0.85rem; padding: 10px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Звукорежиссёр</h1>
+        <div class="subtitle">10 вопросов для подготовки 🍪</div>
+    </header>
+
+    <div class="back-container">
+        <a href="podgotovka.html" class="btn">← Назад</a>
+    </div>
+
+    <div class="questions-container">
+
+        <!-- Вопрос 1 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">1</div>
+                <div class="question-text">Что такое звук?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Звук</strong> — это механические колебания (волны) упругой среды (воздуха, воды, твёрдого тела), которые воспринимаются органами слуха человека и животных.</p>
+                <p>Звук распространяется в виде волн сжатия и разрежения. В вакууме звук не распространяется, потому что там нечему колебаться.</p>
+                <p>Человек слышит звук в диапазоне примерно от <strong>20 Гц до 20 000 Гц</strong> (20 кГц). Ниже — инфразвук, выше — ультразвук.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 2 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">2</div>
+                <div class="question-text">Что такое амплитуда звука?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Амплитуда звука</strong> — это максимальное отклонение колеблющейся частицы (или давления воздуха) от положения равновесия. Простыми словами — это «размах» звуковой волны.</p>
+                <p>Амплитуда определяет <strong>громкость</strong> звука:</p>
+                <ul>
+                    <li>Большая амплитуда → громкий звук</li>
+                    <li>Малая амплитуда → тихий звук</li>
+                </ul>
+                <p>Измеряется в децибелах (дБ) относительно порога слышимости. Например, шёпот — около 30 дБ, а рок-концерт — 110–120 дБ.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 3 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">3</div>
+                <div class="question-text">Что такое частота звука и как она связана с высотой тона?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Частота</strong> — это количество колебаний в секунду. Измеряется в герцах (Гц).</p>
+                <p>Частота напрямую определяет <strong>высоту тона</strong>:</p>
+                <ul>
+                    <li>Низкая частота (20–200 Гц) → низкий, басовый звук</li>
+                    <li>Высокая частота (2 000–20 000 Гц) → высокий, тонкий звук</li>
+                </ul>
+                <p>Например, нота «Ля» первой октавы — 440 Гц, а «Ля» второй октавы — уже 880 Гц.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 4 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">4</div>
+                <div class="question-text">Чем отличается аналоговый звук от цифрового?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Аналоговый звук</strong> — это непрерывный сигнал, который точно повторяет форму звуковой волны. Пример: виниловая пластинка, кассета, микрофонный сигнал.</p>
+                <p><strong>Цифровой звук</strong> — это дискретный сигнал, представленный в виде чисел (нулей и единиц). Он получается путём <strong>дискретизации</strong> (сэмплирования) и <strong>квантования</strong> аналогового сигнала.</p>
+                <p>Цифровой звук удобнее хранить, копировать без потерь и обрабатывать в редакторах, но при низких параметрах может терять качество.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 5 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">5</div>
+                <div class="question-text">Что такое частота дискретизации (Sample Rate)?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Частота дискретизации</strong> — это количество измерений (сэмплов) аналогового сигнала в секунду при его оцифровке. Измеряется в кГц.</p>
+                <p>Основные значения:</p>
+                <ul>
+                    <li><strong>44,1 кГц</strong> — стандарт Audio CD</li>
+                    <li><strong>48 кГц</strong> — стандарт видео и игр</li>
+                    <li><strong>96 кГц и выше</strong> — профессиональная студийная запись</li>
+                </ul>
+                <p>По теореме Котельникова частота дискретизации должна быть минимум в 2 раза выше самой высокой частоты в сигнале, иначе будут искажения (алиасинг).</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 6 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">6</div>
+                <div class="question-text">Что такое битность (Bit Depth)?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Битность</strong> — это количество бит, используемых для хранения одного сэмпла. Она определяет <strong>динамический диапазон</strong> звука.</p>
+                <p>Основные значения:</p>
+                <ul>
+                    <li><strong>16 бит</strong> — стандарт Audio CD, ~96 дБ динамического диапазона</li>
+                    <li><strong>24 бит</strong> — стандарт студийной записи, ~144 дБ</li>
+                    <li><strong>32 бит (float)</strong> — используется при обработке в DAW</li>
+                </ul>
+                <p>Чем выше битность, тем тише можно записать сигнал без потери качества и тем меньше шума квантования.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 7 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">7</div>
+                <div class="question-text">Что такое сведение (Mixing)?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Сведение</strong> — это этап работы над треком, на котором отдельные записанные дорожки (вокал, гитары, барабаны, синтезаторы) объединяются в единое цельное звучание.</p>
+                <p>В процессе сведения звукорежиссёр:</p>
+                <ul>
+                    <li>Регулирует громкость каждой дорожки</li>
+                    <li>Панорамирует (распределяет по стерео)</li>
+                    <li>Обрабатывает эквалайзером (EQ)</li>
+                    <li>Добавляет компрессию, реверберацию, дилей</li>
+                    <li>Убирает частотные конфликты между инструментами</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Вопрос 8 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">8</div>
+                <div class="question-text">Что такое мастеринг (Mastering)?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Мастеринг</strong> — это финальный этап обработки звука перед публикацией. Он делается уже над сведённым стерео-миксом.</p>
+                <p>Задачи мастеринга:</p>
+                <ul>
+                    <li>Выравнивание громкости всех треков альбома</li>
+                    <li>Финальная EQ-коррекция</li>
+                    <li>Компрессия и лимитирование (чтобы трек не клиппировал)</li>
+                    <li>Подготовка к разным форматам: стриминг, CD, винил</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Вопрос 9 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">9</div>
+                <div class="question-text">Что такое компрессия и зачем она нужна?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Компрессия</strong> — это обработка, при которой громкие участки сигнала становятся тише, чтобы уменьшить разницу между самыми громкими и самыми тихими частями.</p>
+                <p>Основные параметры компрессора:</p>
+                <ul>
+                    <li><strong>Threshold</strong> — порог срабатывания</li>
+                    <li><strong>Ratio</strong> — степень сжатия</li>
+                    <li><strong>Attack</strong> — скорость срабатывания</li>
+                    <li><strong>Release</strong> — скорость возврата</li>
+                    <li><strong>Makeup Gain</strong> — компенсация громкости</li>
+                </ul>
+                <p>Компрессия делает звук плотнее, ровнее и «профессиональнее».</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 10 -->
+        <div class="question-card">
+            <div class="question-header" onclick="toggleAnswer(this)">
+                <div class="question-number">10</div>
+                <div class="question-text">Какие форматы аудиофайлов ты знаешь и чем они отличаются?</div>
+                <div class="toggle-icon">+</div>
+            </div>
+            <div class="answer">
+                <p><strong>Без потерь (Lossless):</strong></p>
+                <ul>
+                    <li><strong>WAV</strong> — несжатый, большой размер, стандарт студий</li>
+                    <li><strong>AIFF</strong> — аналог WAV от Apple</li>
+                    <li><strong>FLAC</strong> — сжатый без потерь, меньший размер</li>
+                </ul>
+                <p><strong>С потерями (Lossy):</strong></p>
+                <ul>
+                    <li><strong>MP3</strong> — самый популярный, но теряет часть данных</li>
+                    <li><strong>AAC</strong> — лучше MP3 при том же битрейте (используется в YouTube, Apple Music)</li>
+                    <li><strong>OGG</strong> — открытый формат, часто в играх</li>
+                </ul>
+                <p>Для игр чаще используют <strong>OGG</strong> или <strong>WAV</strong> — они хорошо работают с движками, а OGG ещё и экономит место.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function toggleAnswer(header) {
+            const card = header.parentElement;
+            card.classList.toggle('open');
+        }
+    </script>
+
+</body>
+</html>
